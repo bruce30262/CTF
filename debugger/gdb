@@ -1,0 +1,11 @@
+#!/bin/sh
+cp ~/.gdbinit_peda ~/.gdbinit
+if [ "$#" -eq 0 ]; then
+    gdb
+elif [ "$#" -eq 1 ]; then
+    gdb $1
+elif [ "$#" -eq 2 ]; then
+    if [ "$1" = "-p" ]; then
+        sudo gdb -p $2
+    fi
+fi

@@ -1,0 +1,1 @@
+source ~/pwndbg/gdbinit.py
