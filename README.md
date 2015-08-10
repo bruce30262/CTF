@@ -9,7 +9,7 @@ some config files for setting the debugger
 Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger  
 
 [armgdb](https://github.com/bruce30262/CTF/blob/master/debugger/armgdb)  
-Using [pwndbg](https://github.com/zachriggle/pwndbg) for tracing the ARM & ARM64 binary  
+Using [pwndbg](https://github.com/zachriggle/pwndbg) for tracing the ARM & ARM64 binary ( have to install gdb-multiarch first)
 
 Usage:  
 * Put `gdb` & `armgdb` in the home directory, both of them must be executable  
