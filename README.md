@@ -16,3 +16,7 @@ Usage:
 * Setting alias
     + `alias gdb=~/gdb`
     + `alias armgdb=~/armgdb`
+
+## shellcode
+ shellcode for `execve("/bin/sh", 0, 0)`  
+ now support `x86`, `x64`, `ARM` & `AArch64`
