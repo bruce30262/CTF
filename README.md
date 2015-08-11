@@ -17,8 +17,8 @@ Using [pwndbg](https://github.com/zachriggle/pwndbg) for tracing the ARM & ARM64
 Usage:  
 * Put `gdb` & `armgdb` in the home directory, both of them must be executable  
 * Setting alias
-    + `alias gdb=~/gdb`
-    + `alias armgdb=~/armgdb`
+    + `alias gdb="~/gdb"`
+    + `alias armgdb="~/armgdb"`
 
 ## shellcode
  shellcode for `execve("/bin/sh", 0, 0)`  
