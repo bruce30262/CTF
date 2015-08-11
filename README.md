@@ -12,7 +12,7 @@ some config files for setting the debugger
 Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger  
 
 [pgdb](https://github.com/bruce30262/CTF/blob/master/debugger/pgdb)  
-Using [pwndbg](https://github.com/zachriggle/pwndbg) for tracing C++, ARM & ARM64 binary ( have to install gdb-multiarch first)  
+Using [pwndbg](https://github.com/bruce30262/pwndbg) for tracing C++, ARM & ARM64 binary ( have to install gdb-multiarch first)  
 ( pwndbg works fine with `set print asm-demangle on`, so I prefer to use pwndbg to trace the C++ binary instead of peda )
 
 Usage:  
