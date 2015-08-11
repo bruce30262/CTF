@@ -11,14 +11,15 @@ some config files for setting the debugger
 [gdb](https://github.com/bruce30262/CTF/blob/master/debugger/gdb)  
 Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger  
 
-[armgdb](https://github.com/bruce30262/CTF/blob/master/debugger/armgdb)  
-Using [pwndbg](https://github.com/zachriggle/pwndbg) for tracing the ARM & ARM64 binary ( have to install gdb-multiarch first)
+[pgdb](https://github.com/bruce30262/CTF/blob/master/debugger/pgdb)  
+Using [pwndbg](https://github.com/zachriggle/pwndbg) for tracing C++, ARM & ARM64 binary ( have to install gdb-multiarch first)  
+( pwndbg works fine with `set print asm-demangle on`, so I prefer to use pwndbg to trace the C++ binary instead of peda )
 
 Usage:  
-* Put `gdb` & `armgdb` in the home directory, both of them must be executable  
+* Put `gdb` & `pgdb` in the home directory, both of them must be executable  
 * Setting alias
     + `alias gdb="~/gdb"`
-    + `alias armgdb="~/armgdb"`
+    + `alias pgdb="~/pgdb"`
 
 ## shellcode
  shellcode for `execve("/bin/sh", 0, 0)`  
