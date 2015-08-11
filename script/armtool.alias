@@ -1,0 +1,14 @@
+alias a32="qemu-arm -L /usr/arm-linux-gnueabihf/"
+alias a64="qemu-aarch64 -L /usr/aarch64-linux-gnu/"
+
+alias a32-objdump="/usr/bin/arm-linux-gnueabihf-objdump"
+alias a32-objcopy="/usr/bin/arm-linux-gnueabihf-objcopy"
+alias a32-gcc="/usr/bin/arm-linux-gnueabihf-gcc"
+alias a32-as="/usr/bin/arm-linux-gnueabihf-as"
+alias a32-ld="/usr/bin/arm-linux-gnueabihf-ld"
+
+alias a64-objdump="/usr/bin/aarch64-linux-gnu-objdump"
+alias a64-objcopy="/usr/bin/aarch64-linux-gnu-objcopy"
+alias a64-gcc="/usr/bin/aarch64-linux-gnu-gcc"
+alias a64-as="/usr/bin/aarch64-linux-gnu-as"
+alias a64-ld="/usr/bin/aarch64-linux-gnu-ld"
