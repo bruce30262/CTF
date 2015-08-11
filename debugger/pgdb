@@ -1,0 +1,11 @@
+#!/bin/sh
+cp ~/.gdbinit_pwndbg ~/.gdbinit
+if [ "$#" -eq 0 ]; then
+    gdb-multiarch
+elif [ "$#" -eq 1 ]; then
+    gdb-multiarch $1
+elif [ "$#" -eq 2 ]; then
+    if [ "$1" = "-p" ]; then
+        sudo gdb-multiarch -p $2
+    fi
+fi

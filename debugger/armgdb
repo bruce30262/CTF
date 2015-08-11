@@ -1,7 +1,0 @@
-#!/bin/sh
-cp ~/.gdbinit_arm ~/.gdbinit
-if [ "$#" -eq 0 ]; then
-    gdb-multiarch
-elif [ "$#" -eq 1 ]; then
-    gdb-multiarch $1
-fi
