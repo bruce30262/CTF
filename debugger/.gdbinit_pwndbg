@@ -1,1 +1,2 @@
 source ~/pwndbg/gdbinit.py
+set print asm-demangle on
