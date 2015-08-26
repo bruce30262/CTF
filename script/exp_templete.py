@@ -49,7 +49,7 @@ def sc(arch=context.arch):
     else:
         return None
 
-def str_addr(s, f):
+def str_addr(s, f): # search string address in file
     result = list(f.search(s+"\x00"))
     if not len(result): # no result
         return None
@@ -59,7 +59,7 @@ def str_addr(s, f):
 if __name__ == "__main__":
 
     r = remote(HOST, PORT)
-    r = process(ELF_PATH)
+    #r = process(ELF_PATH)
 
     r.recvuntil("")
     r.sendline("")
