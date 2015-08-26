@@ -31,8 +31,7 @@ def my_recvuntil(s, delim):
     return res
 
 def myexec(cmd):
-	return subprocess.check_output(cmd, shell=True)
-
+    return subprocess.check_output(cmd, shell=True)
 
 def sc(arch=context.arch):
     if arch == "i386":
@@ -50,13 +49,21 @@ def sc(arch=context.arch):
     else:
         return None
 
+def str_addr(s, f):
+    result = list(f.search(s+"\x00"))
+    if not len(result): # no result
+        return None
+    else:
+        return result[0]
 
 if __name__ == "__main__":
 
     r = remote(HOST, PORT)
-    
+    r = process(ELF_PATH)
+
     r.recvuntil("")
     r.sendline("")
+    r.sendafter(delim, data) # recvuntil(delim) + send(data)
+    r.sendlinethen(delim, data) # sendline(data) + recvuntil(delim)
 
     r.interactive()
-
