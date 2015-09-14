@@ -7,7 +7,7 @@ python script templete for CTF pwnable challenges, using [pwntools](https://gith
 alias setting for qemu & ARM toolchain
 
 ## debugger
-some config files for setting the debugger  
+some config files & tools for the debugger  
   
 [gdb](https://github.com/bruce30262/CTF/blob/master/debugger/gdb)  
 Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger  
