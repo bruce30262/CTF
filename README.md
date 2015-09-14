@@ -8,6 +8,7 @@ alias setting for qemu & ARM toolchain
 
 ## debugger
 some config files for setting the debugger  
+  
 [gdb](https://github.com/bruce30262/CTF/blob/master/debugger/gdb)  
 Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger  
 
@@ -20,6 +21,10 @@ Usage:
 * Setting alias
     + `alias gdb="~/gdb"`
     + `alias pgdb="~/pgdb"`
+  
+[py-gdb](https://github.com/bruce30262/CTF/tree/master/debugger/py-gdb)  
+With the help of pwntools, `py-gdb` allow users to communicate with gdb by writing a simple python script  
+here's an [example](https://github.com/bruce30262/CTF/tree/master/debugger/py-gdb/example)  
 
 ## shellcode
  shellcode for `execve("/bin/sh", 0, 0)`  
