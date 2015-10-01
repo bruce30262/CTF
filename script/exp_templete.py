@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from pwn import *
+import roputils
 import subprocess
 import sys
 import time
@@ -20,6 +21,7 @@ context.endian = 'little'
 context.word_size = 32
 elf = ELF(ELF_PATH)
 libc = ELF(LIBC_PATH)
+rop = roputils.ROP(ELF_PATH)
 
 def my_recvuntil(s, delim):
     res = ""
