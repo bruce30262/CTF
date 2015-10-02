@@ -19,6 +19,9 @@ context.arch = 'amd64'
 context.os = 'linux'
 context.endian = 'little'
 context.word_size = 32
+# ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+context.log_level = 'INFO'
+
 elf = ELF(ELF_PATH)
 libc = ELF(LIBC_PATH)
 rop = roputils.ROP(ELF_PATH)
