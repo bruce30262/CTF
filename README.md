@@ -20,11 +20,17 @@ Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger
 Using [pwndbg](https://github.com/bruce30262/pwndbg) for tracing C++, ARM & ARM64 binary ( have to install gdb-multiarch first)  
 ( pwndbg works fine with `set print asm-demangle on`, so I prefer to use pwndbg to trace the C++ binary instead of peda )
 
+[ga](https://github.com/bruce30262/CTF/blob/master/debugger/ga) & [pga](https://github.com/bruce30262/CTF/blob/master/debugger/pga)  
+Script for attaching process  
+Usage: `(p)ga [process name]`
+
 Usage:  
-* Put `gdb` & `pgdb` in the home directory, both of them must be executable  
+* Put `gdb`, `pgdb`, `ga` & `pga` in the home directory, all of them must be executable  
 * Setting alias
     + `alias gdb="~/gdb"`
     + `alias pgdb="~/pgdb"`
+    + `alias ga="~/ga"`
+    + `alias pga="~/pga"`
   
 [py-gdb](https://github.com/bruce30262/CTF/tree/master/debugger/py-gdb)  
 With the help of pwntools, `py-gdb` allow users to communicate with gdb by writing a simple python script. Here's an [example](https://github.com/bruce30262/CTF/tree/master/debugger/py-gdb/example)  
