@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from pwn import *
-import roputils
+#import roputils
 import subprocess
 import sys
 import time
@@ -24,7 +24,7 @@ context.log_level = 'INFO'
 
 elf = ELF(ELF_PATH)
 libc = ELF(LIBC_PATH)
-rop = roputils.ROP(ELF_PATH)
+#rop = roputils.ROP(ELF_PATH)
 
 def my_recvuntil(s, delim):
     res = ""
