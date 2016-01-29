@@ -22,6 +22,7 @@ drwxrwxr-x 7 bruce30262 bruce30262 4096 Jan 30 04:49 ../
 -rwxrw-r-- 1 bruce30262 bruce30262  977 Jan 30 07:02 orw64.s*
 -rw-rw-r-- 1 bruce30262 bruce30262  184 Jan 30 07:07 README.md
 -rwxrwxr-x 1 bruce30262 bruce30262 2241 Jan 30 06:55 scutils.rb*
+
 bruce30262@ubuntu:~/CTF-master/shellcode/utils$ cat /home/ctf/flag
 asdfdsfsdfds
 
