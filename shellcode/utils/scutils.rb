@@ -44,7 +44,7 @@ ARGV.options do |opts|
 end
 
 if filename.nil?
-    puts "No option selected. Use the -h or --help to check the usage."
+    puts "No asm filename selected. Use the -h or --help to check the usage."
 else
     if File.exists?(filename)
         if asm_opt.nil?
