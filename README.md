@@ -23,7 +23,7 @@ Using [pwndbg](https://github.com/bruce30262/pwndbg) for tracing ARM & ARM64 bin
 Script for attaching process  
 Usage: `(p)ga [process name]`
 
-Usage:  
+Setting:  
 * Put `gdb`, `pgdb`, `ga` & `pga` in the home directory, all of them must be executable  
 * Setting alias
     + `alias gdb="~/gdb"`
@@ -36,4 +36,5 @@ With the help of pwntools, `py-gdb` allow users to communicate with gdb by writi
 
 ## shellcode
  shellcode for `execve("/bin/sh", 0, 0)`  
- now support `x86`, `x64`, `ARM` & `AArch64`
+ now support `x86`, `x64`, `ARM` & `AArch64`  
+ Also [scutils](https://github.com/bruce30262/CTF/tree/master/shellcode/utils) helps me generate shellcode more conveniently
