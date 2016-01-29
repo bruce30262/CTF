@@ -37,14 +37,14 @@ ARGV.options do |opts|
     opts.on("-a", "--asm=val [ 32 or 64 ]", "assemble assembly file into x86 or x64 binary") { |val| asm_opt = val }
     opts.on("-o", "--out=val", "output binary name after assembling the assembly ( default = a.bin )") { |val| outfile = val }
     opts.on("-s", "--sc", "--shellcode", "generate shellcode hex string ( ex. myshellcode = \"\\xcd\\x80\" )")   { sc_opt = true }
-    opts.on("-h", "--help", "Display this message")         { puts opts }
+    opts.on("-h", "--help", "Display this message")         { puts opts; exit 0 }
 
     OPT = opts
     opts.parse!
 end
 
 if filename.nil?
-    puts OPT
+    puts "No option selected. Use the -h or --help to check the usage."
 else
     if File.exists?(filename)
         if asm_opt.nil?
