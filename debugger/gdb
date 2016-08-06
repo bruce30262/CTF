@@ -1,11 +1,14 @@
 #!/bin/sh
-cp ~/.gdbinit_peda ~/.gdbinit
-if [ "$#" -eq 0 ]; then
-    gdb
-elif [ "$#" -eq 1 ]; then
-    gdb $1
-elif [ "$#" -eq 2 ]; then
-    if [ "$1" = "-p" ]; then
-        sudo gdb -p $2
+
+cp ~/.gdbinit_peda ~/.gdbinit # use peda as gdb
+cmd="gdb"
+
+# check if we need the sudo command
+for var in "$@"
+do
+    if [ $var = "-p" ]; then
+        cmd="sudo $cmd"       
     fi
-fi
+done
+
+$cmd "$@" # execute gdb with the given arguments
