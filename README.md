@@ -17,7 +17,7 @@ some config files & tools for the debugger
 Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger  
 
 [pgdb](https://github.com/bruce30262/CTF/blob/master/debugger/pgdb)  
-Using [pwndbg](https://github.com/bruce30262/pwndbg) for tracing ARM & ARM64 binary ( have to install gdb-multiarch first)  
+Using [pwndbg](https://github.com/pwndbg/pwndbg) for tracing ARM & ARM64 binary ( have to install gdb-multiarch first)  
 
 [ga](https://github.com/bruce30262/CTF/blob/master/debugger/ga) & [pga](https://github.com/bruce30262/CTF/blob/master/debugger/pga)  
 Script for attaching process  
