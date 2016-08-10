@@ -1,0 +1,4 @@
+alias gdb="~/gdb"
+alias pgdb="~/pgdb"
+alias ga="~/ga"
+alias pga="~/pga"

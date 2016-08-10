@@ -25,11 +25,7 @@ Usage: `(p)ga [process name]`
 
 ##### Setting:  
 * Put `gdb`, `pgdb`, `ga` & `pga` in the home directory, all of them must be executable  
-* Setting alias
-    + `alias gdb="~/gdb"`
-    + `alias pgdb="~/pgdb"`
-    + `alias ga="~/ga"`
-    + `alias pga="~/pga"`
+* Setting alias `source dbg.alias`
   
 [py-gdb](https://github.com/bruce30262/CTF/tree/master/debugger/py-gdb)  
 With the help of pwntools, `py-gdb` allow users to communicate with gdb by writing a simple python script.  
