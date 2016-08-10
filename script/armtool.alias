@@ -1,5 +1,5 @@
-alias a32="qemu-arm -L /usr/arm-linux-gnueabihf/"
-alias a64="qemu-aarch64 -L /usr/aarch64-linux-gnu/"
+alias a32="qemu-arm-static -L /usr/arm-linux-gnueabihf/"
+alias a64="qemu-aarch64-static -L /usr/aarch64-linux-gnu/"
 
 alias a32-objdump="/usr/bin/arm-linux-gnueabihf-objdump"
 alias a32-objcopy="/usr/bin/arm-linux-gnueabihf-objcopy"
