@@ -1,0 +1,3 @@
+[submodule "script/roputils"]
+	path = script/roputils
+	url = https://github.com/bruce30262/roputils.git
