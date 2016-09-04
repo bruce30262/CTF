@@ -74,10 +74,12 @@ def fmtstr(payload, prints, index, data, byte=1):
          payload, prints = fmtstr(payload, prints, 8, 0xc0, 1)
          payload, prints = fmtstr(payload, prints, 9, 0x08047654, 4)
     """
-    if data - prints >= 0:
+    if data - prints > 0:
         num = data - prints
     else:
         num = data + 256**byte - prints
+        while(num <= 0):
+            num += 256**byte
 
     payload += "%" + str(num) + "c" 
     prints = data
@@ -93,6 +95,8 @@ def fmtstr(payload, prints, index, data, byte=1):
 
     return payload, prints
 
+def fmtstr_scan(cnt): # construct payload for scanning fmtstr offset
+    return '.'.join( "%"+str(i)+"$p" for i in xrange(1,cnt+1))
 
 if __name__ == "__main__":
 
