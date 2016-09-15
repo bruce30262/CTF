@@ -1,6 +1,7 @@
 source ~/pwndbg/gdbinit.py
 set print asm-demangle on
 set show-flags on
+
 # customize color-theme
 set banner-color cyan,bold
 set context-register-changed-color red,bold
@@ -11,3 +12,22 @@ set memory-heap-color purple,bold
 set memory-rodata-color green
 set memory-stack-color purple
 set solib-search-path /usr/arm-linux-gnueabihf/lib:/usr/aarch64-linux-gnu/lib
+
+# set solib-search-path base on binary's architecture
+define sss
+python
+arch = gdb.execute("show arch", to_string = True)
+if "aarch64" in arch:
+    gdb.execute("set solib-search-path /usr/aarch64-linux-gnu/lib")
+elif "arm" in arch:
+    gdb.execute("set solib-search-path /usr/arm-linux-gnueabihf/lib")
+end
+
+show solib-search-path
+end
+
+# target remote localhost, arg0 = port
+define trl
+    sss # set solib-search-path first
+    target remote localhost:$arg0
+end
