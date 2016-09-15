@@ -10,3 +10,4 @@ set memory-data-color blue
 set memory-heap-color purple,bold
 set memory-rodata-color green
 set memory-stack-color purple
+set solib-search-path /usr/arm-linux-gnueabihf/lib:/usr/aarch64-linux-gnu/lib
