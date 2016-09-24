@@ -38,6 +38,10 @@ def my_recvuntil(s, delim):
 def myexec(cmd):
     return subprocess.check_output(cmd, shell=True)
 
+def sigint_handler(signum, stack):
+    dbg_pid = int(myexec("ps -A | grep 'qemu-arm-static'|awk '{print $1}'").strip())
+    myexec("bash -c 'kill -SIGINT %d'" % dbg_pid)
+
 def sc(arch=context.arch):
     if arch == "i386":
         # shellcraft.i386.linux.sh(), null free, 22 bytes
@@ -100,12 +104,12 @@ def fmtstr_scan(cnt): # construct payload for scanning fmtstr offset
 
 if __name__ == "__main__":
 
+    # if the binary is run by qemu-static
+    # set the signal handler so I can send ctrl-c to qemu-static (interrupt the debbuger)
+    if context.arch == "arm" or context.arch == "aarch64":
+        signal.signal(signal.SIGINT, sigint_handler)   
+    
     r = remote(HOST, PORT)
     #r = process(ELF_PATH)
-
-    r.recvuntil("")
-    r.sendline("")
-    r.sendafter(delim, data) # recvuntil(delim) + send(data)
-    r.sendlinethen(delim, data) # sendline(data) + recvuntil(delim)
-
+    
     r.interactive()
