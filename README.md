@@ -6,9 +6,8 @@ python script templete for CTF pwnable challenges, using [pwntools](https://gith
 [armtool.alias](https://github.com/bruce30262/CTF/blob/master/script/armtool.alias)  
 alias setting for qemu & ARM toolchain
 
-[roputils.py](https://github.com/bruce30262/roputils)  
-A ROP toolkit, fork from [inaz2](https://github.com/inaz2/roputils)  
-I slightly modified some code, so I can do ROP more easily in x64
+[bruceutils.py](https://github.com/bruce30262/CTF/blob/master/script/bruceutils.py)  
+Some utilities (ex. pack & unpacking data, socket connection ...) written by me, in case of there is no pwntools to use.
 
 ## debugger
 some config files & tools for the debugger  
