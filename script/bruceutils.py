@@ -80,6 +80,11 @@ class remote: # my own socket class, similar to pwntools
         resp = self.recvuntil(delim)
         self.sendline(data)
         return resp
+
+    def sendafter(self, delim, data):
+        resp = self.recvuntil(delim)
+        self.send(data)
+        return resp
     
     def recvline(self):
         return self.recvuntil("\n")
