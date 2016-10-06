@@ -31,3 +31,176 @@ define trl
     sss # set solib-search-path first
     target remote localhost:$arg0
 end
+
+# find
+python
+class Find(gdb.Command):
+    def __init__(self):
+        super (Find, self).__init__ ("find", gdb.COMMAND_USER)
+
+    def invoke(self,args,from_tty):
+        self.dont_repeat()
+        self.do_find(args)
+
+    def do_find(self, value):
+        import string
+        import codecs
+        cmd = None
+        if value.startswith("0x"):
+            value = value[2:]
+            if len(value) %2 != 0:
+                value = "0" + value
+            value = codecs.decode(value, 'hex')[::-1]
+            value = codecs.encode(value, 'hex').decode('UTF-8')
+            cmd = "search -x %s" % value
+        else:
+            cmd = "search -s %s" % value
+        print(cmd)
+        gdb.execute(cmd)
+Find()
+end
+
+# get base address
+define base
+python
+import pwndbg
+import traceback
+file = pwndbg.file.get_file(pwndbg.proc.exe)
+maps = None
+try:
+    maps = pwndbg.vmmap.get()
+except Exception as e:
+    traceback.print_exc()
+    print(pwndbg.color.red("Error while getting program's memory maps"))
+    print(pwndbg.color.red("Make sure you start the program first"))
+else:
+    for page in maps:
+        if page.offset == 0: # is base
+            if page.objfile == file: # binary
+                cmd = "set $code = %s" % hex(page.vaddr)
+                gdb.execute(cmd)
+                print(cmd)
+            elif "libc" in page.objfile: # libc
+                cmd = "set $libc = %s" % hex(page.vaddr)
+                gdb.execute(cmd)
+                print(cmd)
+            elif "[heap]" in page.objfile: # heap
+                cmd = "set $heap = %s" % hex(page.vaddr)
+                gdb.execute(cmd)
+                print(cmd)
+end
+
+end
+
+# get tls section address
+define gettls
+python
+import pwndbg
+import re
+import codecs
+
+arch = pwndbg.arch.current
+if arch == "x86-64":
+    tls_addr = pwndbg.regs.fsbase
+    cmd = "set $tls = %s" % hex(tls_addr)
+    gdb.execute(cmd)
+    print(cmd)
+elif arch == "i386":
+    sysinfo = None
+    vsysaddr = gdb.execute("info functions __kernel_vsyscall",to_string=True).split("\n")[-2].split()[0].strip()
+    value = vsysaddr[2:]
+    if len(value) %2 != 0:
+        value = "0" + value
+    value = codecs.decode(value, 'hex')[::-1]
+    for address in pwndbg.search.search(value):
+        if pwndbg.vmmap.find(address).objfile == '': # mapped
+            sysinfo = hex(address)
+            break
+    match = re.search(r"0x[0-9a-f]{8}",sysinfo)
+    if match :
+        tls_addr = int(match.group(),16) - 0x10
+        cmd = "set $tls = %s" % hex(tls_addr)
+        gdb.execute(cmd)
+        print(cmd)
+    else:
+        print("error")
+else:
+    print(pwndbg.color.red("Currently this command only support x86_64 & i386 architecture, your architecture: %s" % arch))
+end
+
+end
+
+# get canary value
+define getcanary
+python
+import pwndbg
+arch = pwndbg.arch.current
+if (arch != "x86-64") and (arch != "i386"):
+    print(pwndbg.color.red("Currently this command only support x86_64 & i386 architecture, your architecture: %s" % arch))
+else:    
+    tls_addr, canary = None, None
+    tls_check = gdb.execute("p $tls", to_string=True)
+    if "void" in tls_check:
+        gdb.execute("gettls")
+        tls_check = gdb.execute("p $tls", to_string=True)
+
+    tls_addr = int(tls_check.split("=")[1])
+    if tls_addr == None:
+        print(pwndbg.color.red("Failed to get the stack canary value ( no TLS section address )."))
+    else:
+        if "x86-64" in arch:
+            canary = int(gdb.execute("x/gx %s" % hex(tls_addr + 0x28), to_string=True).split(":")[1], 16)
+        else:
+            canary = int(gdb.execute("x/wx %s" % hex(tls_addr + 0x14), to_string=True).split(":")[1], 16)
+    
+    gdb.execute("set $canary=%s" % hex(canary))
+    print("set $canary = %s" % hex(canary))
+end
+
+end
+
+# get tls info (tls addr + canary + stack addr)
+define tls
+gettls
+getcanary
+python
+import pwndbg
+bits = None
+arch = pwndbg.arch.current
+if arch == "x86-64":
+    bits = 64
+else:
+    bits = 32
+
+tls_check = gdb.execute("p $tls", to_string=True)
+if "void" in tls_check:
+    print(pwndbg.color.red("Failed to get the tls address"))
+else:
+    tls_addr = int(tls_check.split("=")[1])
+    canary = int(gdb.execute("p $canary", to_string=True).split("=")[1])
+    tls_off, tls_stack = None, None
+    maps = pwndbg.vmmap.get()
+    stack_start, stack_end = None, None
+    for page in maps:
+        if page.objfile == "[stack]": # is base
+            stack_start, stack_end = page.vaddr, page.vaddr + +page.memsz
+            break
+    # find stack address
+    found_stack = False
+    for addr in range(tls_addr, tls_addr + 0x1000, bits//8):
+        content = int(gdb.execute("x/x %s" % hex(addr), to_string=True).split(":")[1], 16)
+        if (content >= stack_start) and (content <= stack_end):
+            tls_off, tls_stack = addr, content
+            found_stack = True
+            break
+    
+    # show all the info of the .tls section 
+    num, offset = (bits << 1) + 0x10, bits << 2
+    gdb.execute("x/%sx %s" % ( str(num), hex(tls_addr - offset) ))
+    print("tls address: %s" % hex(tls_addr))
+    print("stack canary: %s" % hex(canary))
+    if found_stack:
+        print("Found a stack address %s at %s" %( hex(tls_stack), hex(tls_off) ) )
+end
+
+end
