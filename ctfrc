@@ -106,6 +106,7 @@ ncat-ltrace()
         echo "${@: -1} not found!"
     else
         ncat -vc "ltrace -iC $*" -kl 127.0.0.1 4000 
+        #ncat -vc "ltrace -iC -e 'free+realloc+malloc' ./fooddb_noalarm" -kl 127.0.0.1 4000
     fi
 }
 
