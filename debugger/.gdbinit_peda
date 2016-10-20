@@ -1,1 +1,5 @@
 source ~/peda/peda.py
+source ~/Pwngdb/angelheap/gdbinit.py
+alias bins=printfastbin
+alias hip=heapinfo
+alias tm=tracemalloc
