@@ -1,6 +1,15 @@
 source ~/pwndbg/gdbinit.py
+source ~/Pwngdb/angelheap/gdbinit.py
+
+# alias for angelheap
+alias fbin=printfastbin
+alias hip=heapinfo
+alias tm=tracemalloc
+
+# misc setting for pwndbg
 set print asm-demangle on
 set show-flags on
+set show-retaddr-reg on
 
 # customize color-theme
 set banner-color cyan,bold
