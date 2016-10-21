@@ -1,7 +1,7 @@
 # CTF tools & some other stuff
 ## script
 [exp_template.py](https://github.com/bruce30262/CTF/blob/master/script/exp_template.py)  
-python script templete for CTF pwnable challenges, using [pwntools](https://github.com/Gallopsled/pwntools)  
+python script template for CTF pwnable challenges, using [pwntools](https://github.com/Gallopsled/pwntools)  
 
 [armtool.alias](https://github.com/bruce30262/CTF/blob/master/script/armtool.alias)  
 alias setting for qemu & ARM toolchain
