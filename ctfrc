@@ -87,7 +87,7 @@ ncat-local()
         echo "Usage: $FUNCNAME <command>"
     else
         local PORT=${2:-4000}
-        ncat -vc "$*" -kl 127.0.0.1 $PORT
+        ncat -vc "$*" -kl 0.0.0.0 $PORT
     fi
 }
 
@@ -96,7 +96,7 @@ ncat-strace()
     if [ ! -f ${@: -1} ]; then
         echo "${@: -1} not found!"
     else
-        ncat -vc "strace -ixv -s 100 $*" -kl 127.0.0.1 4000 
+        ncat -vc "strace -ixv -s 100 $*" -kl 0.0.0.0 4000 
     fi
 }
 
@@ -105,8 +105,8 @@ ncat-ltrace()
     if [ ! -f ${@: -1} ]; then
         echo "${@: -1} not found!"
     else
-        ncat -vc "ltrace -iC $*" -kl 127.0.0.1 4000 
-        #ncat -vc "ltrace -iC -e 'free+realloc+malloc' ./fooddb_noalarm" -kl 127.0.0.1 4000
+        ncat -vc "ltrace -iC $*" -kl 0.0.0.0 4000 
+        #ncat -vc "ltrace -iC -e 'free+realloc+malloc' ./fooddb_noalarm" -kl 0.0.0.0 4000
     fi
 }
 
@@ -117,7 +117,7 @@ ncat-pin()
     elif [ ! -f ${@: -1} ]; then
         echo "File '${@: -1}' not found!"
     else
-        ncat -kl 127.0.0.1 4000 -vc "pin -t '${@:1:$#-1}' -- ${@: -1}" 
+        ncat -kl 0.0.0.0 4000 -vc "pin -t '${@:1:$#-1}' -- ${@: -1}" 
     fi
 }
 
@@ -130,7 +130,7 @@ ncat-gdb()
         echo run \'gdb ${@: -1}\' then target remote localhost:4444 in gdb
         echo 
 
-        ncat -vc "gdbserver 127.0.0.1:4444 $*" -kl 127.0.0.1 4000 
+        ncat -vc "gdbserver 0.0.0.0:4444 $*" -kl 0.0.0.0 4000 
     fi
 }
 
