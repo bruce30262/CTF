@@ -10,6 +10,7 @@ alias tm=tracemalloc
 set print asm-demangle on
 set show-flags on
 set show-retaddr-reg on
+set context-clear-screen on
 
 # customize color-theme
 set banner-color cyan,bold
