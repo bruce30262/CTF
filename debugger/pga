@@ -1,13 +1,10 @@
 #!/bin/bash
 
-if [ "$#" -eq 1 ]; then
-    pid=`ps -A | grep -w $1| awk '{print $1'}`
-    if [ ! "$pid" ]; then
-        echo "No such process: $1"
-    else
-       ~/pgdb -p $pid
-    fi
+pid=`pidof $1 | grep "^[0-9]*$"`
+if [ "$?" -eq 0 ]; then
+    ~/pgdb -p $pid "$@"
 else
-    echo "Usage: pga [process name]"
+    echo "Can't find $1 or has duplicate process."
+    echo "Usage: pga [process name] [command]"
 fi
 
