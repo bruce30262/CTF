@@ -7,6 +7,7 @@ alias hip=heapinfo
 alias tm=tracemalloc
 
 # misc setting for pwndbg
+alias offset=distance
 set print asm-demangle on
 set show-flags on
 set show-retaddr-reg on
