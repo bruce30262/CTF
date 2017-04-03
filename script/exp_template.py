@@ -10,17 +10,11 @@ PORT = 10001
 ELF_PATH = ""
 LIBC_PATH = ""
 
-# setting 
-context.arch = 'amd64'
-#context.arch = 'i386'
-#context.arch = 'arm'
-#context.arch = 'aarch64'
-context.os = 'linux'
-context.endian = 'little'
-# ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
-context.log_level = 'INFO'
+context.binary = ELF_PATH
+context.log_level = 'INFO' # ['CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'NOTSET', 'WARN', 'WARNING']
+context.terminal = ['tmux', 'splitw'] # for gdb.attach
 
-elf = ELF(ELF_PATH)
+elf = context.binary # context.binary is an ELF object
 libc = ELF(LIBC_PATH)
 
 def my_recvuntil(s, delim):
@@ -99,7 +93,7 @@ if __name__ == "__main__":
     if context.arch == "arm" or context.arch == "aarch64":
         signal.signal(signal.SIGINT, sigint_handler)   
     
-    r = remote(HOST, PORT)
-    #r = process(ELF_PATH)
+    #r = remote(HOST, PORT)
+    r = process(ELF_PATH)
     
     r.interactive()
