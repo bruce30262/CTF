@@ -95,5 +95,6 @@ if __name__ == "__main__":
     
     #r = remote(HOST, PORT)
     r = process(ELF_PATH)
-    
+    #gdb.attach(r, gdbscript=open("./ggg", "r"))
+
     r.interactive()
