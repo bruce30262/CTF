@@ -6,19 +6,18 @@ $stderr.sync = true
 require 'optparse'
 
 def getshellcode(filename)
-    resp = `nasm -f bin -o code.o #{filename} && xxd -i code.o`
+    resp = `nasm -f bin -o sc.o #{filename} && xxd -i sc.o`
     if resp.include?"0x00"
         puts "Null byte alert!"
     end
     puts resp
     sc_hex = ""
-    open("code.o", "rb") do |file|
+    open("sc.o", "rb") do |file|
         while( c = file.read(1) ) do
             sc_hex += "\\x%02x" % c.ord
         end
     end
     puts "hex string: \"#{sc_hex}\""
-    `rm code.o`
 end
 
 # default options
@@ -36,7 +35,7 @@ ARGV.options do |opts|
     opts.on("-f", "--file=val", "the assembly file ( ex. --file=shell.s )") { |val| filename = val }
     opts.on("-a", "--asm=val [ 32 or 64 ]", "assemble assembly file into x86 or x64 binary") { |val| asm_opt = val }
     opts.on("-o", "--out=val", "output binary name after assembling the assembly ( default = a.bin )") { |val| outfile = val }
-    opts.on("-s", "--sc", "--shellcode", "generate shellcode hex string ( ex. myshellcode = \"\\xcd\\x80\" )")   { sc_opt = true }
+    opts.on("-s", "--sc", "--shellcode", "generate binary file ( sc.o ) & shellcode hex string ( ex. myshellcode = \"\\xcd\\x80\" )")   { sc_opt = true }
     opts.on("-h", "--help", "Display this message")         { puts opts; exit 0 }
 
     OPT = opts
