@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cp ~/.gdbinit_gef ~/.gdbinit # use peda as gdb
+cp ~/.gdbinit_gef ~/.gdbinit # use gef as gdb
 cmd="gdb"
 
 # check if we need the sudo command
