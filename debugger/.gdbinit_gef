@@ -1,0 +1,4 @@
+source /home/bruce30262/.gdbinit-gef.py
+gef config context.clear_screen True
+gef config context.layout "regs code source stack trace extra"
+
