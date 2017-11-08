@@ -5,6 +5,7 @@ source ~/Pwngdb/angelheap/gdbinit.py
 alias fbin=printfastbin
 alias hip=heapinfo
 alias tm=tracemalloc
+alias pp=parseheap
 
 # misc setting for pwndbg
 alias offset=distance
