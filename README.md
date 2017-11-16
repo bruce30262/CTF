@@ -7,7 +7,10 @@ python script template for CTF pwnable challenges, using [pwntools](https://gith
 alias setting for qemu & ARM toolchain
 
 [bruceutils.py](https://github.com/bruce30262/CTF/blob/master/script/bruceutils.py)  
-Some utilities (ex. pack & unpacking data, socket connection ...) written by me, in case of there is no pwntools to use.
+Some utilities (ex. pack & unpacking data, socket connection ...) written by me, in case of there is no pwntools to use.  
+
+[brucepwn](https://github.com/bruce30262/CTF/blob/master/script/brucepwn/brucepwn/brucepwn.py)  
+Self made utilities for CTF pwn challenges  
 
 ## debugger
 some config files & tools for the debugger  
