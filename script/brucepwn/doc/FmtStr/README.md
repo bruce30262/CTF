@@ -2,13 +2,11 @@ FmtStr
 ===================
 Simple utility written by me ( bruce30262 )  for constructing format string payload
 
-----------
-
 Idea
 -------------
 The main purpose of this utility is to help user construct a format string payload that can **write a specific data to a memory address stored at a specific stack position**.
 
-For example we want to construct a format string payload for a x86 ELF : 
+For example we want to construct a format string payload for an x86 ELF : 
 ```
 # first write a single byte to memory address A stored at stack position 10
 # then write a single byte to memory address B stored at stack position 11
@@ -26,6 +24,8 @@ Usage
 ------------
 * Create a `FmtStr` object
 ```python
+from brucepwn import *
+
 fmt = FmtStr()
 ```
 * Or you can initialize the object with your own payload
@@ -40,7 +40,7 @@ fmt.write(....)
 fmt.write(....)
 send_payload(fmt)
 # now we need a new FmtStr object
-fmt.new() # create a new, clean FmtStr object to use
+fmt.new() # create a new, clean FmtStr object to use. You can also use your own payload, like fmt.new("AAAA", printed=4)
 fmt.write(.....)
 ```
 
@@ -69,12 +69,16 @@ fmt.scan(10, start=10) # will return "%10$p.%11$p.%12$p......%19$p"
 * Use `str()` to get the current format string payload
 ```python
 fmt.write(data=data, index=10, byte=2)
-fmt.write(data=data2, index=11, byte=1, add_printed=4)
+fmt.write(data=data2, index=11, byte=1)
 fmt.pad(72)
 print "fmt payload:{}".format(str(fmt))
 # now send the fmt payload
 r.sendline(str(fmt))
 ``` 
  
+Example
+------------
+See [exp.py](https://github.com/bruce30262/CTF/blob/master/script/brucepwn/doc/FmtStr/exp.py) and [exp64.py](https://github.com/bruce30262/CTF/blob/master/script/brucepwn/doc/FmtStr/exp64.py) for the example usage.
+
 
 
