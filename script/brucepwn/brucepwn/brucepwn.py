@@ -71,10 +71,11 @@ class FmtStr:
         byte: how many bytes to write
         add_printed: this will be added to self.printed
         """
+        pos = "" if not index else str(index)+"$"
         self.printed += add_printed
         num = data - self.printed
         while(num <= 0):
             num += 256**byte
-        self.payload += "%" + str(num) + "c"
         self.printed = data
-        self.payload += "%" + str(index) + "$" + self.tbl[byte]
+        self.payload += "%" + str(num) + "c"
+        self.payload += "%" + pos + self.tbl[byte]
