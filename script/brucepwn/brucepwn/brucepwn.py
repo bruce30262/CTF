@@ -61,7 +61,7 @@ class FmtStr:
         """
         construct fmt payload for scanning ( using %[index]$p)
         """
-        return '.'.join( "%"+str(i)+"$p" for i in xrange(start,start+cnt+1))
+        return '.'.join( "%"+str(i)+"$p" for i in xrange(start,start+cnt))
 
     def write(self, data, index, byte, add_printed=0):
         """
