@@ -47,7 +47,8 @@ fmt.write(.....)
 * Write `data` to memory address at stack position `10` with 2 bytes
 ```python
 fmt.write(data=data, index=10, byte=2)
-# or you can use fmt.write(data, 10, 2)
+# Or you can use fmt.write(data, 10, 2)
+# If you don't want to use index, just pass None: fmt.write(data, None, 2)
 ``` 
 
 * Use `add_printed` argument to update `printed`
