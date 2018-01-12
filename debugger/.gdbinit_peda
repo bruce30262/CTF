@@ -4,3 +4,5 @@ alias bins=printfastbin
 alias hip=heapinfo
 alias tm=tracemalloc
 alias pp=parseheap
+
+pset option autosave off
