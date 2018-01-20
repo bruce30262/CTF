@@ -3,3 +3,22 @@ gef config context.clear_screen True
 gef config context.layout "regs code source stack trace extra"
 
 set history expansion on
+
+# set solib-search-path base on binary's architecture
+define sss
+python
+arch = gdb.execute("show arch", to_string = True)
+if "aarch64" in arch:
+    gdb.execute("set solib-search-path /usr/aarch64-linux-gnu/lib")
+elif "arm" in arch:
+    gdb.execute("set solib-search-path /usr/arm-linux-gnueabihf/lib")
+end
+
+show solib-search-path
+end
+
+# target remote localhost, arg0 = port
+define trl
+    sss # set solib-search-path first
+    target remote localhost:$arg0
+end
