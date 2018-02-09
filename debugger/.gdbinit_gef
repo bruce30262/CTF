@@ -1,5 +1,6 @@
 source ~/.gdbinit-gef.py
-gef config context.clear_screen True
+gef config context.clear_screen 1
+gef config context.ignore_registers "$cs $ss $ds $es $fs $gs"
 gef config context.layout "regs code source stack trace extra"
 
 set history expansion on
