@@ -88,20 +88,19 @@ except Exception as e:
     print(pwndbg.color.red("Error while getting program's memory maps"))
     print(pwndbg.color.red("Make sure you start the program first"))
 else:
+    cmd = "set $code = %s" % hex(pwndbg.elf.exe().address)
+    gdb.execute(cmd)
+    print(cmd)
     for page in maps:
+        cmd = ""
         if page.offset == 0: # is base
-            if page.objfile == file: # binary
-                cmd = "set $code = %s" % hex(page.vaddr)
-                gdb.execute(cmd)
-                print(cmd)
-            elif "libc" in page.objfile: # libc
+            if "libc-" in page.objfile or "libc.so.6" in page.objfile: # libc
                 cmd = "set $libc = %s" % hex(page.vaddr)
-                gdb.execute(cmd)
-                print(cmd)
             elif "[heap]" in page.objfile: # heap
                 cmd = "set $heap = %s" % hex(page.vaddr)
-                gdb.execute(cmd)
-                print(cmd)
+        if len(cmd):
+            gdb.execute(cmd)
+            print(cmd)
 end
 
 end
