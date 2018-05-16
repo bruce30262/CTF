@@ -4,6 +4,7 @@ gef config context.ignore_registers "$cs $ss $ds $es $fs $gs"
 gef config context.layout "regs code source stack trace extra"
 
 set history expansion on
+set print asm-demangle on
 
 # set solib-search-path base on binary's architecture
 define sss
