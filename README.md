@@ -12,6 +12,9 @@ Some utilities (ex. pack & unpacking data, socket connection ...) written by me,
 [brucepwn](https://github.com/bruce30262/CTF/blob/master/script/brucepwn/brucepwn/brucepwn.py)  
 Self made utilities for CTF pwn challenges  
 
+[change_ld.py](https://github.com/bruce30262/CTF/blob/master/script/change_ld.py)  
+Simple utility to assign new ld.so of the given binary
+
 ## debugger
 some config files & tools for the debugger  
   
@@ -25,13 +28,12 @@ Using [pwndbg](https://github.com/pwndbg/pwndbg) for tracing ARM & ARM64 binary 
 Script for attaching process  
 Usage: `(p)ga [process name]`
 
+[gef](https://github.com/bruce30262/CTF/blob/master/debugger/gef)  
+[GEF](https://github.com/hugsy/gef) is also a great debugger.
+
 ##### Setting:  
 * Put `gdb`, `pgdb`, `ga` & `pga` in the home directory, all of them must be executable  
 * Add the alias setting in `dbg.alias`
-  
-[py-gdb](https://github.com/bruce30262/CTF/tree/master/debugger/py-gdb)  
-With the help of pwntools, `py-gdb` allow users to communicate with gdb by writing a simple python script.  
-Here's an [example](https://github.com/bruce30262/CTF/tree/master/debugger/py-gdb/example)  
 
 ## shellcode
  shellcode for `execve("/bin/sh", 0, 0)`  
