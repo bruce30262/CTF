@@ -1,5 +1,5 @@
 #!/bin/sh
 
 cp ~/.gdbinit_gef ~/.gdbinit # use gef as gdb
-cmd="sudo gdb-multiarch" # always use sudo, for "ps -a" command in gef
+cmd="gdb-multiarch"
 $cmd "$@" # execute gdb with the given arguments
