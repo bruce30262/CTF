@@ -24,15 +24,11 @@ Using [peda](https://github.com/bruce30262/peda) for the default GNU debugger
 [pgdb](https://github.com/bruce30262/CTF/blob/master/debugger/pgdb)  
 Using [pwndbg](https://github.com/pwndbg/pwndbg) for tracing ARM & ARM64 binary ( have to install gdb-multiarch first)  
 
-[ga](https://github.com/bruce30262/CTF/blob/master/debugger/ga) & [pga](https://github.com/bruce30262/CTF/blob/master/debugger/pga)  
-Script for attaching process  
-Usage: `(p)ga [process name]`
-
 [gef](https://github.com/bruce30262/CTF/blob/master/debugger/gef)  
 [GEF](https://github.com/hugsy/gef) is also a great debugger.
 
 ##### Setting:  
-* Put `gdb`, `pgdb`, `ga` & `pga` in the home directory, all of them must be executable  
+* Put `gdb`, `pgdb`, `gef` in the home directory, all of them must be executable  
 * Add the alias setting in `dbg.alias`
 
 ## shellcode
