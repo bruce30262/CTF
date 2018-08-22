@@ -2,4 +2,13 @@
 
 cp ~/.gdbinit_gef ~/.gdbinit # use gef as gdb
 cmd="gdb-multiarch"
+
+# check if we need the sudo command
+for var in "$@"
+do
+    if [ $var = "-p" ]; then
+        cmd="sudo $cmd"       
+    fi
+done
+
 $cmd "$@" # execute gdb with the given arguments
