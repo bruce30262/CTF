@@ -10,6 +10,11 @@ alias pp=parseheap
 # misc setting for pwndbg
 alias offset=distance
 alias ctx=context
+alias vh=vis_heap_chunks
+alias plk=probeleak
+alias bv=breakrva
+alias sr=stepret
+alias sc=source
 set print asm-demangle on
 set show-flags on
 set show-retaddr-reg on
