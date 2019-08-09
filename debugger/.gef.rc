@@ -1,0 +1,6 @@
+[aliases]
+find=grep
+hip=heapinfo
+tm=tracemalloc
+pp=parseheap
+

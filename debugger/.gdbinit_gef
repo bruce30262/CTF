@@ -1,8 +1,12 @@
 source ~/.gdbinit-gef.py
+source ~/Pwngdb/angelheap/gdbinit.py
+
+# gef config
 gef config context.clear_screen 1
 gef config context.ignore_registers "$cs $ss $ds $es $fs $gs"
 gef config context.layout "regs code args source stack extra"
 
+# misc
 set history expansion on
 set print asm-demangle on
 
@@ -52,3 +56,36 @@ document at
 Attach to latest pid of this file. Can also run gdbscript if provided
 Usage: at [gdbscript] (optional)
 end
+
+# off (offset)
+python
+class Off(gdb.Command):
+    def __init__(self):
+        super (Off, self).__init__ ("off", gdb.COMMAND_USER)
+
+    def invoke(self,args,from_tty):
+        self.dont_repeat()
+        args = args.split(" ")
+        if len(args) == 2:
+            self.do_off(args)
+        else:
+            gdb.execute("help off")
+
+    def do_off(self, args):
+        arg1 = str(gdb.parse_and_eval(args[0]))
+        arg2 = str(gdb.parse_and_eval(args[1]))
+        try:
+            x = int(arg1, 16)
+            y = int(arg2, 16)
+            print("{:#x} --> {:#x} : {:#x} byte(s)".format(x, y, y-x))
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+Off()
+end
+document off
+Calculate distance between two variables
+Example: off $rdi $rsi
+Example: off 1 0xf
+end
+
