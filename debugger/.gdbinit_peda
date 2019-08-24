@@ -14,7 +14,7 @@ import subprocess as sp
 import traceback
 file = peda.getfile()
 try:
-    cmd = "pidof {}".format(file)
+    cmd = "pidof \"{}\"".format(file)
     pid = int(sp.check_output(cmd, shell=True).decode('utf-8').split(" ")[0])
     print("Attaching to pid: {}".format(pid))
     peda.execute("attach {}".format(pid))

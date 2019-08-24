@@ -59,7 +59,7 @@ import subprocess as sp
 import traceback
 file = pwndbg.file.get_file(pwndbg.proc.exe)
 try:
-    cmd = "pidof {}".format(file)
+    cmd = "pidof \"{}\"".format(file)
     pid = int(sp.check_output(cmd, shell=True).decode('utf-8').split(" ")[0])
     print("Attaching to pid: {}".format(pid))
     gdb.execute("attach {}".format(pid))
