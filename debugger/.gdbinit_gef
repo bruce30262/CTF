@@ -89,3 +89,27 @@ Example: off $rdi $rsi
 Example: off 1 0xf
 end
 
+# base
+python
+class Base(GenericCommand):
+    """Get base address of code, heap and libc."""
+    _cmdline_ = "base"
+    _syntax_  = "{:s}".format(_cmdline_)
+
+    @only_if_gdb_running
+    def do_invoke(self, argv):
+        gdb.execute("set $code=$_pie()")
+        proc_map = get_process_maps()
+        for section in proc_map:
+            if "libc-" in section.path or "libc.so.6" in section.path:
+                gdb.execute("set $libc={}".format(section.page_start))
+            elif "[heap]" in section.path:
+                gdb.execute("set $heap={}".format(section.page_start))
+                break
+        print("$code = {}".format(gdb.parse_and_eval("$code")))
+        print("$heap = {}".format(gdb.parse_and_eval("$heap")))
+        print("$libc = {}".format(gdb.parse_and_eval("$libc")))
+        return
+
+register_external_command(Base())
+end
