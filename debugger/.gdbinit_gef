@@ -100,11 +100,15 @@ class Base(GenericCommand):
     def do_invoke(self, argv):
         gdb.execute("set $code=$_pie()")
         proc_map = get_process_maps()
+        set_libc, set_heap = False, False
         for section in proc_map:
-            if "libc-" in section.path or "libc.so.6" in section.path:
+            if ("libc-" in section.path or "libc.so.6" in section.path) and not set_libc:
                 gdb.execute("set $libc={}".format(section.page_start))
-            elif "[heap]" in section.path:
+                set_libc = True
+            elif ("[heap]" in section.path) and not set_heap:
                 gdb.execute("set $heap={}".format(section.page_start))
+                set_heap = True
+            if set_libc and set_heap:
                 break
         print("$code = {}".format(gdb.parse_and_eval("$code")))
         print("$heap = {}".format(gdb.parse_and_eval("$heap")))
