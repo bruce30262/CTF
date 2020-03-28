@@ -98,18 +98,14 @@ class Base(GenericCommand):
 
     @only_if_gdb_running
     def do_invoke(self, argv):
-        gdb.execute("set $code=$_pie()")
+        gdb.execute("set $code=$_base()")
+        gdb.execute("set $heap=$_base(\"heap\")")
+        # Use more strict rule to find libc's address
         proc_map = get_process_maps()
-        set_libc, set_heap = False, False
         for section in proc_map:
-            if ("libc-" in section.path or "libc.so.6" in section.path) and not set_libc:
+            if "libc-" in section.path or "libc.so.6" in section.path:
                 gdb.execute("set $libc={}".format(section.page_start))
-                set_libc = True
-            elif ("[heap]" in section.path) and not set_heap:
-                gdb.execute("set $heap={}".format(section.page_start))
-                set_heap = True
-            if set_libc and set_heap:
-                break
+                break 
         print("$code = {}".format(gdb.parse_and_eval("$code")))
         print("$heap = {}".format(gdb.parse_and_eval("$heap")))
         print("$libc = {}".format(gdb.parse_and_eval("$libc")))
