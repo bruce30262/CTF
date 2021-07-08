@@ -1,7 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 cp ~/.gdbinit_pwndbg ~/.gdbinit # use pwndbg as gdb
-cmd="gdb-multiarch"
+
+cmd="gdb"
+# Detect if we need to use gdb-multiarch
+for var in "$@"
+do
+    if [ -f $var ]; then # if this is a file
+        file_type=`file $var`
+        if [[ $file_type == *"ELF 64-bit"* ]] || [[ $file_type == *"ELF 32-bit"* ]]; then # is ELF
+            if ! [[ $file_type == *"x86-64"* ]] && ! [[ $file_type == *"Intel 80386"* ]]; then # is not x86 series
+                cmd="gdb-multiarch"
+            fi
+            break
+        fi
+    fi
+done
 
 # check if we need the sudo command
 for var in "$@"
