@@ -1,3 +1,3 @@
 alias gdb="~/gdb"
-alias pgdb="~/pgdb"
+alias gdbp="~/gdbp"
 alias gef="~/gef"
