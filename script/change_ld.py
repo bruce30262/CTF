@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 # Simple utility to assign new ld.so of the given binary
 # base on https://github.com/matrix1001/welpwn/blob/master/PwnContext/auxiliary.py
@@ -48,10 +47,10 @@ def changeld(binary, ld, output):
             if size <= len(ld):
                 fail("Failed to change PT_INTERP from {} to {} (ld.so path name too long)".format(data, ld))
                 return None
-            binary.write(addr, ld.ljust(size, '\0'))
+            binary.write(addr, ld.ljust(size, b"\0"))
             binary.save(output)    
             os.chmod(output, 0b111000000) #rwx------
-    log.success("PT_INTERP has changed from {} to {}. Save to {}".format(data, ld, output)) 
+    success("PT_INTERP has changed from {} to {}. Save to {}".format(data, ld, output)) 
 
 parser = argparse.ArgumentParser(description='Simple utility to assign new ld.so of the given binary')
 parser.add_argument('-b', '--binary', action='store', dest="binary", help='Filename of the input binary')

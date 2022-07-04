@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import os
@@ -22,6 +22,11 @@ from datetime import datetime
 TIMEOUT = 5
 logging.basicConfig(format='\n========== %(levelname)s : %(asctime)s : %(message)s ==========', datefmt='%Y/%m/%d %H:%M:%S')
 
+def to_bytes(x):
+    if isinstance(x, str):
+        x = x.encode()
+    return x
+
 # pack & unpack
 def p8(x):
     return struct.pack('<B', x & 0xff)
@@ -36,16 +41,16 @@ def p64(x):
     return struct.pack('<Q', x & 0xffffffffffffffff)
 
 def u8(x):
-    return struct.unpack('<B', x)[0]
+    return struct.unpack('<B', to_bytes(x))[0]
 
 def u16(x):
-    return struct.unpack('<H', x.ljust(2, '\x00'))[0]
+    return struct.unpack('<H', to_bytes(x).ljust(2, b'\x00'))[0]
 
 def u32(x):
-    return struct.unpack('<I', x.ljust(4, '\x00'))[0]
+    return struct.unpack('<I', to_bytes(x).ljust(4, b'\x00'))[0]
 
 def u64(x):
-    return struct.unpack('<Q', x.ljust(8, '\x00'))[0]
+    return struct.unpack('<Q', to_bytes(x).ljust(8, b'\x00'))[0]
 
 
 # socket connection
@@ -68,10 +73,10 @@ class remote: # my own socket class, similar to pwntools
         self.sock.connect((host,port))
         
     def send(self, data):
-        self.sock.send(data)
+        self.sock.send(to_bytes(data))
 
     def sendline(self, data):
-        self.sock.send(data+"\n")
+        self.sock.send(to_bytes(data)+b"\n")
 
     def recv(self, num):
         return self.sock.recv(num)
@@ -87,11 +92,12 @@ class remote: # my own socket class, similar to pwntools
         return resp
     
     def recvline(self):
-        return self.recvuntil("\n")
+        return self.recvuntil(b"\n")
 
     def recvuntil(self, delim):
+        delim = to_bytes(delim)
         try:
-            res = ""
+            res = b""
             while delim not in res:
                 c = self.sock.recv(1)
                 if not len(c): # close by remote host
@@ -116,6 +122,7 @@ class remote: # my own socket class, similar to pwntools
             return res
 
     def recvprecise(self, delim):
+        delim = to_bytes(delim)
         resp = self.recvuntil(delim)
         try:
             if resp != delim:
