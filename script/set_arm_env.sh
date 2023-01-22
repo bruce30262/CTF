@@ -23,6 +23,5 @@ sudo apt-get install -y g++-aarch64-linux-gnu libstdc++-$gxx_v-dev-arm64-cross &
 # binfmt
 sudo apt-get install 'binfmt*'
 
-echo "setting alias..."
-cp $cur_dir/armtool.alias ~/dotfiles/rcS/arm-toolchain.alias
-echo "source .zshrc to apply the latest arm-toolchain setting"
+set +x
+echo "source armtool.alias to apply the latest arm-toolchain setting."
