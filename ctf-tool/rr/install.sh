@@ -14,10 +14,6 @@ VERSION="$(get_latest_release rr-debugger/rr)"
 FILENAME=rr-$VERSION-Linux-x86_64.deb
 echo "Latest rr release: $VERSION"
 
-echo "Installing perf..."
-sudo apt update
-sudo apt install -y linux-tools-generic linux-tools-`uname -r` # Install perf
-
 echo "Downloading rr .deb package..."
 wget https://github.com/rr-debugger/rr/releases/download/$VERSION/$FILENAME
 
