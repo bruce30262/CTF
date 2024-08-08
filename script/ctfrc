@@ -9,20 +9,6 @@ alias asm-arm="arm-linux-gnueabi-as -aln -o /dev/null"
 alias asm-a64="aarch64-linux-gnu-as -aln -o /dev/null"
 alias lddd="LD_TRACE_LOADED_OBJECTS=1"
 
-checksec()
-{
-    checksec_file="$HOME/CTF-master/script/checksec.sh"
-    if [ ! -f "$checksec_file" ]; then
-        echo "Can't find checksec.sh"
-    else
-        if [ -z $1 ]; then
-            echo "Usage: checksec <filename>"
-        else
-            $checksec_file --file $1
-        fi
-    fi
-}
-
 aslr()
 {
     if [ -z $1 ]; then
