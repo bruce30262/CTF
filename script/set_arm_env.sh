@@ -6,27 +6,18 @@ set -ex
 # will install gcc & g++ toolchain, libc & libstdc++
 # download armtool.alias from https://github.com/bruce30262/CTF
 
-APT="apt"
-
-# If nala exist, use nala instead of apt
-if command -v nala &> /dev/null
-then
-    APT="nala"
-fi
-
-
-sudo $APT update
+sudo apt update
 
 # install g++ if not exist
 if ! command -v g++ &> /dev/null
 then
-    sudo $APT install -y g++
+    sudo apt install -y g++
 fi
 
 cur_dir=$(dirname $(readlink -f $BASH_SOURCE))
 gxx_v=$(g++ -v  2>&1 | tail -1 | awk '{print $3}' | awk -F. '{print $1}')
 
-sudo $APT install -y qemu-user \
+sudo apt install -y qemu-user \
     gcc-arm-linux-gnueabihf libc6-dev-armhf-cross gcc-arm-linux-gnueabi libc6-dev-armel-cross \
     gcc-aarch64-linux-gnu libc6-dev-arm64-cross \
     g++-arm-linux-gnueabihf libstdc++-$gxx_v-dev-armhf-cross g++-arm-linux-gnueabi libstdc++-$gxx_v-dev-armel-cross \
